@@ -1,0 +1,3 @@
+return {
+  "vuciv/vim-bujo",
+}
