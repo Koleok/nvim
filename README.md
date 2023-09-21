@@ -1,4 +1,5 @@
-# 💤 LazyVim
+# koleok nvim config 💌 💤
 
-A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
-Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
+A great adventure in `nvim`
+
+_(Refer to the [lazyvim docs](https://lazyvim.github.io/installation) to learn more)_
