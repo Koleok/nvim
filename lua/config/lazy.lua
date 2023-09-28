@@ -1,5 +1,12 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
+if vim.fn.executable("nvr") == 1 then
+  local nvr = "nvr --servername " .. vim.v.servername .. " "
+  vim.env.GIT_EDITOR = nvr .. "-cc split +'setl bh=delete' --remote-wait"
+  vim.env.EDITOR = nvr .. "-l --remote" -- (Optional)
+  vim.env.VISUAL = nvr .. "-l --remote" -- (Optional)
+end
+
 if not vim.loop.fs_stat(lazypath) then
   -- bootstrap lazy.nvim
   -- stylua: ignore
