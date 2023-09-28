@@ -18,3 +18,4 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 vim.keymap.set("n", "<leader>cc", "<cmd>(scratch-insert-reuse)", { desc = "Open scratchpad", remap = true })
 vim.keymap.set("n", "<leader>uu", "<cmd>Telescope undo<cr>", { desc = "Undo tree (telescope)", remap = true })
+vim.keymap.set("n", "<leader>rl", "<cmd>LspRestart<cr>", { desc = "Restart lsp", remap = true })
