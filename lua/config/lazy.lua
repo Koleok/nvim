@@ -60,9 +60,9 @@ require("lazy").setup({
     },
   },
   configs = {
-    -- tsserver = {
+    -- tsserver =
     --   on_attach = on_attach,
-    --   root_dir = nvim_lsp.util.root_pattern("package.json"),
+    --   root_dir = nvim_lsp.util.root_pattern("tsconfig.json"),
     --   single_file_support = false
     -- },
 
