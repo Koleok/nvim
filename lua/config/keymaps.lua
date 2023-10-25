@@ -3,7 +3,6 @@
 -- Add any additional keymaps here
 
 -- Yank the current filepath to the clipboard
-vim.keymap.set("n", "<leader>p", ':let @*=expand("%")<CR>', { desc = "Copy path of open buffer", remap = true })
 
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
@@ -16,6 +15,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
-vim.keymap.set("n", "<leader>cc", "<cmd>(scratch-insert-reuse)", { desc = "Open scratchpad", remap = true })
+-- vim.keymap.set("n", "<leader>cc", "<cmd>(scratch-insert-reuse)<cr>", { desc = "Open scratchpad", remap = true })
 vim.keymap.set("n", "<leader>uu", "<cmd>Telescope undo<cr>", { desc = "Undo tree (telescope)", remap = true })
-vim.keymap.set("n", "<leader>rl", "<cmd>LspRestart<cr>", { desc = "Restart lsp", remap = true })
+
+vim.keymap.set("n", "<leader>al", "<cmd>LspRestart<cr>", { desc = "Restart lsp", remap = true })
+vim.keymap.set("n", "<leader>ap", ':let @*=expand("%")<CR>', { desc = "Copy path of open buffer", remap = true })
