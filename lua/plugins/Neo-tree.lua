@@ -51,6 +51,17 @@ return {
       --           return a.type > b.type
       --       end
       --   end , -- this sorts files and directories descendantly
+      event_handlers = {
+        {
+          event = "vim_buffer_enter",
+          handler = function(args)
+            -- Could use "file_opened" for this, but going lower level to get mouse events and focus changes
+            if string.find(args.afile, ".") then
+              require("neo-tree.command").execute({ action = "close" })
+            end
+          end,
+        },
+      },
       default_component_configs = {
         container = {
           enable_character_fade = true,
@@ -225,6 +236,7 @@ return {
         -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
         use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
         -- instead of relying on nvim autocmd events.
+
         window = {
           mappings = {
             ["<bs>"] = "navigate_up",
