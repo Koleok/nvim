@@ -17,6 +17,5 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 -- vim.keymap.set("n", "<leader>cc", "<cmd>(scratch-insert-reuse)<cr>", { desc = "Open scratchpad", remap = true })
 vim.keymap.set("n", "<leader>uu", "<cmd>Telescope undo<cr>", { desc = "Undo tree (telescope)", remap = true })
-
 vim.keymap.set("n", "<leader>al", "<cmd>LspRestart<cr>", { desc = "Restart lsp", remap = true })
 vim.keymap.set("n", "<leader>ap", ':let @*=expand("%")<CR>', { desc = "Copy path of open buffer", remap = true })
