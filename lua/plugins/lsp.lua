@@ -9,4 +9,15 @@ return {
   --     position = "right",
   --   },
   -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      ---@type lspconfig.options
+      servers = {
+        sourcekit = {
+          cmd = { "xcrun", "/usr/bin/sourcekit-lsp" },
+        },
+      },
+    },
+  },
 }
