@@ -47,6 +47,11 @@ vim.keymap.set("n", "<leader>gp", ":!gh pr view --web<CR>", {
   remap = true,
 })
 
+vim.keymap.set("n", "<leader>gy", ":!gh pr view --json url --jq .url | pbcopy<CR>", {
+  desc = "Copy the github PR url to the clipboard",
+  remap = true,
+})
+
 vim.keymap.set("n", "<leader>gu", function()
   local function get_remote_url()
     local handle = io.popen("git config --get remote.origin.url")
@@ -103,6 +108,7 @@ vim.keymap.set("n", "<leader>gu", function()
   local github_url = get_github_url()
 
   if github_url then
+    vim.cmd(":let @*='" .. github_url .. "'<CR>")
     vim.fn.jobstart({ "open", github_url }, { detach = true })
   else
     print("Unable to determine GitHub URL for the current repository.")
