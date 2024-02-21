@@ -56,6 +56,7 @@ return {
     config = function()
       require("telescope").load_extension("fzf")
       require("telescope").load_extension("undo")
+      require("telescope").load_extension("git_worktree")
     end,
     -- keys = {
     -- { "<leader>fh", require("telescope")("find_files", { cwd = false }), desc = "Find Files (with hidden)" },
