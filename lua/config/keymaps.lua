@@ -2,13 +2,14 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Yank the current filepath to the clipboard
+-- Better move line from Ben 🙌 ty!
+vim.keymap.set("n", "<C-j>", "<cmd>m .+1<cr>==", { desc = "Move down" })
+vim.keymap.set("n", "<C-k>", "<cmd>m .-2<cr>==", { desc = "Move up" })
+vim.keymap.set("i", "<C-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move down" })
+vim.keymap.set("i", "<C-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move up" })
+vim.keymap.set("v", "<C-j>", ":m '>+1<cr>gv=gv", { desc = "Move down" })
+vim.keymap.set("v", "<C-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
-vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
-vim.keymap.set("n", "<C-j>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("n", "<C-k>", ":m '<-2<CR>gv=gv")
---
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -27,6 +28,7 @@ vim.keymap.set("n", "<leader>al", "<cmd>LspRestart<cr>", {
   remap = true,
 })
 
+-- Yank the current filepath to the clipboard
 vim.keymap.set("n", "<leader>ap", ':let @*=expand("%")<CR>', {
   desc = "Copy path of open buffer",
   remap = true,
@@ -44,6 +46,11 @@ vim.keymap.set("n", "<leader>ad", "<C-w><enter>gd", {
 
 vim.keymap.set("n", "<leader>gpo", ":!gh pr view --web<CR>", {
   desc = "Open the github PR for current branch",
+  remap = true,
+})
+
+vim.keymap.set("n", "<leader>gb", ":!git branch --show-current | pbcopy<CR>", {
+  desc = "Copy branch name to clipboard",
   remap = true,
 })
 
