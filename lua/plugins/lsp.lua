@@ -1,4 +1,5 @@
 return {
+
   -- -- add symbols-outline
   -- {
   --   "simrat39/symbols-outline.nvim",
@@ -14,8 +15,23 @@ return {
     opts = {
       ---@type lspconfig.options
       servers = {
+        -- denols = {},
+        -- tsserver = {
+        --   settings = {
+        --     single_file_support = false,
+        --   },
+        -- },
         sourcekit = {
           cmd = { "xcrun", "/usr/bin/sourcekit-lsp" },
+        },
+        solidity = {
+          cmd = {
+            "nomicfoundation-solidity-language-server",
+            "--stdio",
+          },
+          filetypes = { "solidity" },
+          root_dir = require("lspconfig").util.find_git_ancestor,
+          single_file_support = true,
         },
       },
     },

@@ -2,6 +2,11 @@ return {
   "nvim-telescope/telescope.nvim",
   keys = {
     { "<leader><space>", "<cmd>Telescope find_files<cr>", desc = "Find Files (but better)" },
+    -- { "<leader>fh", require("telescope")("find_files", { cwd = false }), desc = "Find Files (with hidden)" },
+    -- { "<leader><space>", require("telescope")("files", { cwd = false }), desc = "Find Files (root dir)" },
+    -- { "<leader>ff", require("telescope")("files", { cwd = false }), desc = "Find Files (root dir)" },
+    -- { "<leader>sg", require("telescope")("live_grep", { cwd = false }), desc = "Grep (root dir)" },
+    -- { "<leader>sw", require("telescope")("grep_string", { cwd = false }), desc = "Word (root dir)" },
   },
   opts = {
     defaults = {
@@ -58,12 +63,5 @@ return {
       require("telescope").load_extension("undo")
       require("telescope").load_extension("git_worktree")
     end,
-    -- keys = {
-    -- { "<leader>fh", require("telescope")("find_files", { cwd = false }), desc = "Find Files (with hidden)" },
-    -- { "<leader><space>", require("telescope")("files", { cwd = false }), desc = "Find Files (root dir)" },
-    -- { "<leader>ff", require("telescope")("files", { cwd = false }), desc = "Find Files (root dir)" },
-    -- { "<leader>sg", require("telescope")("live_grep", { cwd = false }), desc = "Grep (root dir)" },
-    -- { "<leader>sw", require("telescope")("grep_string", { cwd = false }), desc = "Word (root dir)" },
-    -- },
   },
 }
