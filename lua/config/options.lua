@@ -5,6 +5,9 @@ vim.opt.winbar = "%=%m %f"
 -- vim.opt.conceallevel = 1
 vim.g.root_spec = { "cwd" }
 
+-- For tmux escape delay
+-- vim.g.ttimeout = 100
+
 return {
   -- {
   --   "hrsh7th/nvim-cmp",
