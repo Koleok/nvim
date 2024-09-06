@@ -18,7 +18,6 @@ return {
         width = 0.90,
         -- prompt + 25 lines of preview + 10 lines for results + buffer
         height = 0.90,
-        preview_height = 0.70,
       },
       -- file_ignore_patterns = {
       --   "node_modules",
