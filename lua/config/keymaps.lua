@@ -40,6 +40,21 @@ vim.keymap.set("n", "<leader>al", "<cmd>LspRestart<cr>", {
   remap = true,
 })
 
+vim.keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", {
+  remap = true,
+  desc = "Pick from obsidian tags",
+})
+
+vim.keymap.set("n", "<leader>oh", "<cmd>ObsidianTOC<CR>", {
+  remap = true,
+  desc = "Pick from obsidian TOC",
+})
+
+vim.keymap.set("n", "<leader>ol", "<cmd>ObsidianLinks<CR>", {
+  remap = true,
+  desc = "Pick from obsidian links",
+})
+
 -- Yank the current filepath to the clipboard
 vim.keymap.set("n", "<leader>ap", ':let @*=expand("%")<CR>', {
   desc = "Copy path of open buffer",
