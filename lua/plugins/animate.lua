@@ -3,6 +3,7 @@ local timing = animate.gen_timing.linear({ duration = 50, unit = "total" })
 
 return {
   "echasnovski/mini.animate",
+  enabled = false,
   event = "VeryLazy",
   opts = function()
     -- don't use animate when scrolling with the mouse
