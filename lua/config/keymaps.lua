@@ -28,6 +28,56 @@ vim.keymap.set("v", "<leader>lu", ":!awk '!seen[$0]++'", {
   remap = true,
 })
 
+vim.keymap.set("n", "<C-y>", ":lua Snacks.terminal.toggle('lazydocker', { win = { style = \"split\"}})<CR>", {
+  desc = "Toggle docker pane",
+  remap = true,
+})
+
+vim.keymap.set("t", "<C-y>", "<Cmd>close<CR>", {
+  desc = "Close docker pane",
+  remap = true,
+})
+
+vim.keymap.set("n", "<C-p>", ":lua Snacks.terminal.toggle('aider --watch-files -c ~/.aider.conf.yml')<CR>", {
+  desc = "Toggle aider pane",
+  remap = true,
+})
+
+vim.keymap.set("t", "<C-p>", "<Cmd>close<CR>", {
+  desc = "Close aider pane",
+  remap = true,
+})
+
+vim.keymap.set("n", "<C-i>", function()
+  -- Check if package.json exists first
+  local has_package_json = vim.fn.filereadable("./package.json") == 1
+  local has_npm_scripts = false
+
+  if has_package_json then
+    -- Use a more reliable way to check for scripts in package.json
+    vim.fn.system("jq -e '.scripts != null and (.scripts | length > 0)' ./package.json 2>/dev/null")
+    has_npm_scripts = vim.v.shell_error == 0
+  end
+
+  local has_mprocs_config = vim.fn.filereadable("./mprocs.yaml") == 1
+
+  if has_mprocs_config then
+    Snacks.terminal.toggle("mprocs", { win = { style = "split" } })
+  elseif has_npm_scripts then
+    Snacks.terminal.toggle("mprocs --npm", { win = { style = "split" } })
+  else
+    print("mprocs requires either a package.json with scripts or an mprocs.yaml config file")
+  end
+end, {
+  desc = "Run mprocs with smart detection",
+  remap = true,
+})
+
+vim.keymap.set("t", "<C-i>", "<Cmd>close<CR>", {
+  desc = "Close mprocs pane",
+  remap = true,
+})
+
 -- vim.keymap.set("n", "<leader>cc", "<cmd>(scratch-insert-reuse)<cr>", { desc = "Open scratchpad", remap = true })
 -- vim.keymap.set("n", "<leader>fh", "<cmd>Telescope find_files<cr>", { desc = "Find files (with hidden)", remap = true })
 vim.keymap.set("n", "<leader>uu", "<cmd>Telescope undo<cr>", {
@@ -76,12 +126,12 @@ vim.keymap.set("n", "<leader>gpo", ":!gh pr view --web<CR>", {
   remap = true,
 })
 
-vim.keymap.set("n", "<leader>gb", ":!git branch --show-current | pbcopy<CR>", {
+vim.keymap.set("n", "<leader>gb", ":!git branch --show-current | wl-copy<CR>", {
   desc = "Copy branch name to clipboard",
   remap = true,
 })
 
-vim.keymap.set("n", "<leader>gpy", ":!gh pr view --json url --jq .url | pbcopy<CR>", {
+vim.keymap.set("n", "<leader>gpy", ":!gh pr view --json url --jq .url | wl-copy<CR>", {
   desc = "Copy the github PR url to the clipboard",
   remap = true,
 })
@@ -139,7 +189,7 @@ local function get_github_url()
 end
 
 local function copy_to_clipboard(str)
-  vim.fn.system("echo '" .. str .. "' | pbcopy")
+  vim.fn.system("echo '" .. str .. "' | wl-copy")
 end
 
 local function get_linear_code(branch)
