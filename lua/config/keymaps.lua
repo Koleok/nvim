@@ -23,6 +23,22 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- vim.keymap.set("n", "<C-+>", [[<cmd>horizontal resize +2<cr>]]) -- make the window bigger horizontally by pressing shift and =
 -- vim.keymap.set("n", "<C-_>", [[<cmd>horizontal resize -2<cr>]]) -- make the window smaller horizontally by pressing shift and -
 
+vim.keymap.set("n", "<leader>mm", function()
+  require("linear-nvim").show_assigned_issues()
+end, { desc = "Show assigned Linear issues" })
+
+vim.keymap.set("v", "<leader>mc", function()
+  require("linear-nvim").create_issue()
+end, { desc = "Create Linear issue from selection" })
+
+vim.keymap.set("n", "<leader>mc", function()
+  require("linear-nvim").create_issue()
+end, { desc = "Create Linear issue" })
+
+vim.keymap.set("n", "<leader>ms", function()
+  require("linear-nvim").show_issue_details()
+end, { desc = "Show Linear issue details" })
+
 vim.keymap.set("v", "<leader>lu", ":!awk '!seen[$0]++'", {
   desc = "Remove duplicated lines",
   remap = true,
