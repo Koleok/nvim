@@ -1,5 +1,6 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
+  enabled = true,
   branch = "v3.x",
   requires = {
     "nvim-lua/plenary.nvim",
@@ -28,6 +29,7 @@ return {
       end,
     },
   },
+
   config = function()
     -- If you want icons for diagnostic errors, you'll need to define them somewhere:
     vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
@@ -36,7 +38,7 @@ return {
     vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
 
     require("neo-tree").setup({
-      close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+      close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
       popup_border_style = "rounded",
       enable_git_status = true,
       enable_diagnostics = true,
@@ -51,6 +53,13 @@ return {
       --       end
       --   end , -- this sorts files and directories descendantly
       event_handlers = {
+        -- trying to have the tree be closed by default, doesn't work but event is valid
+        -- {
+        --   event = "vim_after_session_load",
+        --   handler = function()
+        --     require("neo-tree.command").execute({ action = "close" })
+        --   end,
+        -- },
         {
           event = "vim_buffer_enter",
           handler = function(args)

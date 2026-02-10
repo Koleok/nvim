@@ -1,3 +1,3 @@
 return {
-  "lommix/godot.nvim",
+  -- "lommix/godot.nvim",
 }

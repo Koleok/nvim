@@ -25,19 +25,27 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 vim.keymap.set("n", "<leader>mm", function()
   require("linear-nvim").show_assigned_issues()
-end, { desc = "Show assigned Linear issues" })
+end, {
+  desc = "Show assigned Linear issues",
+})
 
 vim.keymap.set("v", "<leader>mc", function()
   require("linear-nvim").create_issue()
-end, { desc = "Create Linear issue from selection" })
+end, {
+  desc = "Create Linear issue from selection",
+})
 
 vim.keymap.set("n", "<leader>mc", function()
   require("linear-nvim").create_issue()
-end, { desc = "Create Linear issue" })
+end, {
+  desc = "Create Linear issue",
+})
 
 vim.keymap.set("n", "<leader>ms", function()
   require("linear-nvim").show_issue_details()
-end, { desc = "Show Linear issue details" })
+end, {
+  desc = "Show Linear issue details",
+})
 
 vim.keymap.set("v", "<leader>lu", ":!awk '!seen[$0]++'", {
   desc = "Remove duplicated lines",
@@ -54,35 +62,80 @@ vim.keymap.set("t", "<C-y>", "<Cmd>close<CR>", {
   remap = true,
 })
 
-vim.keymap.set("n", "<C-p>", ":lua Snacks.terminal.toggle('aider --watch-files -c ~/.aider.conf.yml')<CR>", {
-  desc = "Toggle aider pane",
+vim.keymap.set("n", "<C-O>", ":lua Snacks.terminal.toggle('lagent')<CR>", {
+  desc = "Open lagent pane",
   remap = true,
 })
 
-vim.keymap.set("t", "<C-p>", "<Cmd>close<CR>", {
+vim.keymap.set("t", "<C-O>", "<Cmd>close<CR>", {
+  desc = "Close lagent pane",
+  remap = true,
+})
+
+vim.keymap.set("n", "<C-P>", ":lua Snacks.terminal.toggle('ss && aider --watch-files -c ~/.aider.conf.yml')<CR>", {
+  desc = "Open aider pane",
+  remap = true,
+})
+
+vim.keymap.set("t", "<C-P>", "<Cmd>close<CR>", {
   desc = "Close aider pane",
   remap = true,
 })
 
+vim.keymap.set("n", "<leader>rr", "<Cmd>Rest run<CR>", {
+  desc = "Run request (rest.nvim)",
+})
+
+vim.keymap.set("n", "<leader>ry", "<Cmd>Rest curl yank<CR>", {
+  desc = "Copy curl request under cursor (rest.nvim)",
+})
+
 vim.keymap.set("n", "<C-i>", function()
-  -- Check if package.json exists first
   local has_package_json = vim.fn.filereadable("./package.json") == 1
   local has_npm_scripts = false
 
   if has_package_json then
-    -- Use a more reliable way to check for scripts in package.json
     vim.fn.system("jq -e '.scripts != null and (.scripts | length > 0)' ./package.json 2>/dev/null")
     has_npm_scripts = vim.v.shell_error == 0
   end
 
   local has_mprocs_config = vim.fn.filereadable("./mprocs.yaml") == 1
+  local has_maskfile = vim.fn.filereadable("./maskfile.md") == 1
 
   if has_mprocs_config then
     Snacks.terminal.toggle("mprocs", { win = { style = "split" } })
   elseif has_npm_scripts then
     Snacks.terminal.toggle("mprocs --npm", { win = { style = "split" } })
+  elseif has_maskfile then
+    -- Build a minimal mprocs.yaml with one proc per mask command.
+    local lines = {}
+    for line in io.lines("./maskfile.md") do
+      local cmd = line:match("^%s*%#+%s+([%w%-_]+)%s*$")
+      if cmd then
+        table.insert(lines, "  " .. cmd .. ":")
+        table.insert(lines, "    cmd: ['mask', '" .. cmd .. "']")
+        table.insert(lines, "    stop: { send-keys: ['<C-c>'] }")
+        table.insert(lines, "    autostart: false")
+      end
+    end
+
+    if #lines == 0 then
+      print("maskfile.md found but no commands detected")
+      return
+    end
+
+    local tmpdir = vim.fn.tempname()
+    vim.fn.mkdir(tmpdir, "p")
+    local tmpconf = tmpdir .. "/mprocs.yaml"
+    local yaml = { "procs:" }
+    for _, l in ipairs(lines) do
+      table.insert(yaml, l)
+    end
+    vim.fn.writefile(yaml, tmpconf)
+
+    Snacks.terminal.toggle("mprocs -c " .. tmpconf, { win = { style = "split" } })
   else
-    print("mprocs requires either a package.json with scripts or an mprocs.yaml config file")
+    print("mprocs requires either a package.json with scripts, a maskfile.md or an mprocs.yaml config file")
   end
 end, {
   desc = "Run mprocs with smart detection",
@@ -142,12 +195,12 @@ vim.keymap.set("n", "<leader>gpo", ":!gh pr view --web<CR>", {
   remap = true,
 })
 
-vim.keymap.set("n", "<leader>gb", ":!git branch --show-current | wl-copy<CR>", {
+vim.keymap.set("n", "<leader>gb", ":!git branch --show-current | pbcopy<CR>", {
   desc = "Copy branch name to clipboard",
   remap = true,
 })
 
-vim.keymap.set("n", "<leader>gpy", ":!gh pr view --json url --jq .url | wl-copy<CR>", {
+vim.keymap.set("n", "<leader>gpy", ":!gh pr view --json url --jq .url | pbcopy<CR>", {
   desc = "Copy the github PR url to the clipboard",
   remap = true,
 })
@@ -205,15 +258,15 @@ local function get_github_url()
 end
 
 local function copy_to_clipboard(str)
-  vim.fn.system("echo '" .. str .. "' | wl-copy")
+  vim.fn.system("echo '" .. str .. "' | pbcopy")
 end
 
 local function get_linear_code(branch)
-  return string.match(branch, "([a-z]+%-[0-9]+)")
+  return string.match(branch, "([eai]+%-[0-9]+)")
 end
 
 local function get_linear_url(issue_code)
-  return "https://linear.app/privy/issue/" .. issue_code
+  return "https://linear.app/latermavely/issue/" .. issue_code
 end
 
 vim.keymap.set("n", "<leader>gio", function()
@@ -281,3 +334,82 @@ end, {
   desc = "Create new worktree",
   remap = true,
 })
+
+vim.keymap.set(
+  "v",
+  "<leader>8",
+  -- Break into 80w lines separated by `+`
+  function()
+    local start = vim.fn.getpos("'<")
+    local finish = vim.fn.getpos("'>")
+    local lines = vim.fn.getline(start[2], finish[2])
+    local indent = lines[1]:match("^%s*") or ""
+    local full_text = table.concat(lines, "\n")
+
+    local matches = {}
+    local raw = ""
+    local i = 1
+    local pattern = "(['\"`])(([^%1\\]|\\.)*)%1"
+    while i <= #full_text do
+      local s, e, quote, content = full_text:find(pattern, i)
+      if not s then
+        break
+      end
+
+      table.insert(matches, { s = s, e = e, content = content, quote = quote })
+
+      local unescaped_content = content:gsub("\\" .. quote, quote):gsub("\\\\", "\\")
+      raw = raw .. unescaped_content
+      i = e + 1
+    end
+
+    if #matches == 0 then
+      print("No string literals found in selection.")
+      return
+    end
+
+    local first_match = matches[1]
+    local last_match = matches[#matches]
+    local template = full_text:sub(1, first_match.s - 1) .. "%%PLACEHOLDER%%" .. full_text:sub(last_match.e + 1)
+    local first_quote = first_match.quote
+    local width = 80 - #indent - #first_quote * 2 - 3 -- for quotes and " + "
+
+    if width < 10 then
+      width = 10
+    end
+
+    local chunks = {}
+    if #raw > 0 then
+      while #raw > 0 do
+        local chunk = raw:sub(1, width)
+        if #raw > width and chunk:sub(-1) == "\\" then
+          chunk = raw:sub(1, width - 1) -- avoid cutting an escape
+        end
+        table.insert(chunks, chunk)
+        raw = raw:sub(#chunk + 1)
+      end
+    end
+
+    local new_string_lines = {}
+    if #chunks > 0 then
+      for idx, ch in ipairs(chunks) do
+        local escaped_ch = ch:gsub("\\", "\\\\"):gsub(first_quote, "\\" .. first_quote)
+        local line = string.format("%s%s%s", first_quote, escaped_ch, first_quote)
+        if idx < #chunks then
+          line = line .. " +"
+        end
+        table.insert(new_string_lines, line)
+      end
+    else
+      table.insert(new_string_lines, first_quote .. first_quote) -- empty string
+    end
+
+    local new_string_part = table.concat(new_string_lines, "\n" .. indent)
+    local new_text = template:gsub("%%PLACEHOLDER%%", new_string_part)
+
+    local final_lines = vim.split(new_text, "\n")
+
+    vim.api.nvim_buf_set_lines(0, start[2] - 1, finish[2], false, final_lines)
+  end,
+  { noremap = true, silent = true }
+)

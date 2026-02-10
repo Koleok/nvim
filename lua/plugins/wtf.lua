@@ -1,9 +1,11 @@
 return {
-  "piersolenski/wtf.nvim",
-  enabled = false,
-  dependencies = {
-    "MunifTanjim/nui.nvim",
-  },
+  -- "piersolenski/wtf.nvim",
+  -- enabled = false,
+  -- dependencies = {
+  --   "MunifTanjim/nui.nvim",
+  -- },
+
+  -- actually commented
   -- opts = function()
   --   local handle = io.popen("pass show api/tokens/openai")
   --
@@ -15,22 +17,23 @@ return {
   --
   --   return config
   -- end,
-  keys = {
-    {
-      "<leader>xw",
-      mode = { "n", "x" },
-      function()
-        require("wtf").ai()
-      end,
-      desc = "Debug diagnostic with AI",
-    },
-    {
-      "<leader>xs",
-      mode = { "n" },
-      function()
-        require("wtf").search()
-      end,
-      desc = "Search diagnostic with Google",
-    },
-  },
+
+  -- keys = {
+  --   {
+  --     "<leader>xw",
+  --     mode = { "n", "x" },
+  --     function()
+  --       require("wtf").ai()
+  --     end,
+  --     desc = "Debug diagnostic with AI",
+  --   },
+  --   {
+  --     "<leader>xs",
+  --     mode = { "n" },
+  --     function()
+  --       require("wtf").search()
+  --     end,
+  --     desc = "Search diagnostic with Google",
+  --   },
+  -- },
 }

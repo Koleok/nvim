@@ -1,3 +1,3 @@
 return {
-  "metakirby5/codi.vim",
+  --   "metakirby5/codi.vim",
 }

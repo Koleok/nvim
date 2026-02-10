@@ -1,3 +1,3 @@
 return {
-  "skanehira/denops-graphql.vim",
+  -- "skanehira/denops-graphql.vim",
 }

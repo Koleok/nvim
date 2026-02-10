@@ -1,5 +1,4 @@
 return {
-
   -- -- add symbols-outline
   -- {
   --   "simrat39/symbols-outline.nvim",
@@ -26,6 +25,7 @@ return {
         sourcekit = {
           cmd = { "xcrun", "/usr/bin/sourcekit-lsp" },
         },
+
         solidity = {
           cmd = {
             "nomicfoundation-solidity-language-server",
@@ -35,6 +35,16 @@ return {
           root_dir = require("lspconfig").util.find_git_ancestor,
           single_file_support = true,
         },
+
+        -- surrealql = {
+        --   cmd = { "~/oss/surrealql-lsp/target/debug/surrealql-lsp-server" },
+        --   filetypes = { "surql" },
+        --   root_dir = require("lspconfig").util.find_git_ancestor,
+        --   single_file_support = true,
+        --   settings = {
+        --     -- Server-specific settings go here
+        --   },
+        -- },
       },
     },
   },
