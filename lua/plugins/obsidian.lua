@@ -1,7 +1,7 @@
 do
   return {
     "epwalsh/obsidian.nvim",
-    enabled = true,
+    enabled = false,
     -- lazy = true,
     -- event = {
     --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.

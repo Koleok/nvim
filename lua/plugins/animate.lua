@@ -2,7 +2,7 @@ local animate = require("mini.animate")
 local timing = animate.gen_timing.linear({ duration = 50, unit = "total" })
 
 return {
-  "echasnovski/mini.animate",
+  "nvim-mini/mini.animate",
   enabled = false,
   event = "VeryLazy",
   opts = function()

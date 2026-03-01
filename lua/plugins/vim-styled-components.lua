@@ -1,3 +1,3 @@
 return {
-  "styled-components/vim-styled-components",
+  -- "styled-components/vim-styled-components",
 }
