@@ -48,25 +48,105 @@ vim.keymap.set("t", "<C-p>", "<Cmd>close<CR>", {
   remap = true,
 })
 
+local mask_tmpconf = nil
 vim.keymap.set("n", "<C-i>", function()
-  -- Check if package.json exists first
   local has_package_json = vim.fn.filereadable("./package.json") == 1
   local has_npm_scripts = false
 
   if has_package_json then
-    -- Use a more reliable way to check for scripts in package.json
     vim.fn.system("jq -e '.scripts != null and (.scripts | length > 0)' ./package.json 2>/dev/null")
     has_npm_scripts = vim.v.shell_error == 0
   end
 
   local has_mprocs_config = vim.fn.filereadable("./mprocs.yaml") == 1
+  local has_maskfile = vim.fn.filereadable("./maskfile.md") == 1
 
   if has_mprocs_config then
     Snacks.terminal.toggle("mprocs", { win = { style = "split" } })
   elseif has_npm_scripts then
     Snacks.terminal.toggle("mprocs --npm", { win = { style = "split" } })
+  elseif has_maskfile then
+    if not mask_tmpconf then
+      local in_code_block = false
+      local commands = {}
+      local current_parent = nil
+      local current_child = nil
+
+      for line in io.lines("./maskfile.md") do
+        if line:match("^```") then
+          in_code_block = not in_code_block
+          if in_code_block then
+            if current_child then
+              current_child.has_code = true
+            elseif current_parent then
+              current_parent.has_code = true
+            end
+          end
+        end
+
+        if not in_code_block then
+          local hashes, cmd = line:match("^%s*(#+)%s+([%w%-_][%w%-_ ]*)%s*$")
+          if hashes and cmd then
+            cmd = cmd:match("^(.-)%s*$") -- trim trailing space
+            local depth = #hashes
+            if depth == 2 then
+              current_child = nil
+              current_parent = { name = cmd, has_code = false, children = {} }
+              table.insert(commands, current_parent)
+            elseif depth == 3 and current_parent then
+              current_child = { name = cmd, has_code = false }
+              table.insert(current_parent.children, current_child)
+            end
+          end
+        end
+      end
+
+      local lines = {}
+      for _, parent in ipairs(commands) do
+        local valid_children = {}
+        for _, child in ipairs(parent.children) do
+          if child.has_code then
+            table.insert(valid_children, child)
+          end
+        end
+
+        if #valid_children > 0 then
+          for _, child in ipairs(valid_children) do
+            local cmd_parts = {}
+            for part in child.name:gmatch("%S+") do
+              table.insert(cmd_parts, "'" .. part .. "'")
+            end
+            table.insert(lines, "  " .. child.name .. ":")
+            table.insert(lines, "    cmd: ['mask', " .. table.concat(cmd_parts, ", ") .. "]")
+            table.insert(lines, "    stop: { send-keys: ['<C-c>'] }")
+            table.insert(lines, "    autostart: false")
+          end
+        elseif parent.has_code then
+          table.insert(lines, "  " .. parent.name .. ":")
+          table.insert(lines, "    cmd: ['mask', '" .. parent.name .. "']")
+          table.insert(lines, "    stop: { send-keys: ['<C-c>'] }")
+          table.insert(lines, "    autostart: false")
+        end
+      end
+
+      if #lines == 0 then
+        print("maskfile.md found but no commands detected")
+        return
+      end
+
+      local tmpdir = vim.fn.tempname()
+      vim.fn.mkdir(tmpdir, "p")
+      mask_tmpconf = tmpdir .. "/mprocs.yaml"
+      local yaml = { "procs:" }
+      for _, l in ipairs(lines) do
+        table.insert(yaml, l)
+      end
+      vim.fn.writefile(yaml, mask_tmpconf)
+    end
+
+    Snacks.terminal.toggle("mprocs -c " .. mask_tmpconf, { win = { style = "split" } })
   else
-    print("mprocs requires either a package.json with scripts or an mprocs.yaml config file")
+    print("mprocs requires either a package.json with scripts, a maskfile.md or an mprocs.yaml config file")
   end
 end, {
   desc = "Run mprocs with smart detection",
